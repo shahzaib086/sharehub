@@ -30,28 +30,28 @@ In today's world, a lot of resources, especially food, go to waste while others 
 ## RESTFUL Resources
 1. Authentication and User Management
 
-POST /register
+- POST /register
 Register a new user with required details (e.g., name, email, password).
 Request Body: name, email, password
 Response: Status code 201 if successful, with user ID and token.
 
-POST /login
+- POST /login
 Authenticate a user and return a JWT token for authorized access.
 Request Body: email, password
 Response: Status code 200 with JWT token for session management.
 
-POST /logout
+- POST /logout
 End the user session and invalidate the token.
 Response: Status code 200 if successful.
 
 2. Users
 
-GET /users/{userId}
+- GET /users/{userId}
 Retrieve a specific user’s profile information.
 Parameters: userId (path)
 Response: Status code 200 with user data (e.g., name, email, joinDate, location).
 
-PUT /users/{userId}
+- PUT /users/{userId}
 Update the profile information of a user (must be authenticated).
 Parameters: userId (path)
 Request Body: Optional fields such as name, email, location, preferences
@@ -59,62 +59,62 @@ Response: Status code 200 with updated user data.
 
 3. Items
 
-POST /items
+- POST /items
 Create a new item listing.
 Request Body: title, description, category, location, expiryDate, imageUrl (optional)
 Response: Status code 201 with newly created item ID and item details.
 
-GET /items
+- GET /items
 Retrieve a list of items based on optional filters.
 Query Parameters: category, location, radius, dateRange
 Response: Status code 200 with a list of items matching filters.
 
-GET /items/{itemId}
+- GET /items/{itemId}
 Retrieve detailed information about a specific item.
 Parameters: itemId (path)
 Response: Status code 200 with item details.
 
-PUT /items/{itemId}
+- PUT /items/{itemId}
 Update an item (restricted to the item owner).
 Parameters: itemId (path)
 Request Body: Fields to update, such as title, description, category, location, expiryDate
 Response: Status code 200 with updated item details.
 
-DELETE /items/{itemId}
+- DELETE /items/{itemId}
 Delete an item (restricted to the item owner).
 Parameters: itemId (path)
 Response: Status code 204 if successful.
 
 4. Categories
 
-GET /categories
+- GET /categories
 Retrieve a list of all available item categories.
 Response: Status code 200 with categories such as Food, Books, Clothes, etc.
 
-POST /categories
+- POST /categories
 Add a new category (admin-only action).
 Request Body: name, description
 Response: Status code 201 with category ID and details.
 
-DELETE /categories/{categoryId}
+- DELETE /categories/{categoryId}
 Delete a category (admin-only action).
 Parameters: categoryId (path)
 Response: Status code 204 if successful.
 
 5. Notifications
 
-GET /notifications
+- GET /notifications
 Retrieve all notifications for the authenticated user.
 Response: Status code 200 with a list of notifications (e.g., new item postings near the user).
 
-DELETE /notifications/{notificationId}
+- DELETE /notifications/{notificationId}
 Delete a specific notification.
 Parameters: notificationId (path)
 Response: Status code 204 if successful.
 
 6. Location-Based Searches
 
-GET /search
+- GET /search
 Search for items by location, radius, and category filters.
 Query Parameters: latitude, longitude, radius, category
 Response: Status code 200 with items that match the search criteria.
