@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: ShareHub API
+  version: 1.0.0
+  description: API for ShareHub, a platform for sharing unused items and reducing waste.
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+paths:
+  /users:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                password:
+                  type: string
+                  example: password123
+                email:
+                  type: string
+                  example: johndoe@example.com
+      responses:
+        '201':
+          description: User created successfully.
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: A list of users.
+  /users/{id}/favorites:
+    get:
+      summary: Get user's favorite categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID.
+      responses:
+        '200':
+          description: A list of favorite categories for the user.
+    post:
+      summary: Add a favorite category for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  example: Food
+      responses:
+        '201':
+          description: Favorite category added successfully.
+  /items:
+    get:
+      summary: Get all items with filters
+      parameters:
+        - name: keyword
+          in: query
+          description: Search items by keyword
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter items by category
+          schema:
+            type: string
+        - name: location
+          in: query
+          description: Search items by location (latitude,longitude)
+          schema:
+            type: string
+            example: "40.7128,-74.0060"
+      responses:
+        '200':
+          description: A list of items.
+    post:
+      summary: Add a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Fresh Bread
+                category:
+                  type: string
+                  example: Food
+                description:
+                  type: string
+                  example: A loaf of fresh bread available for pickup.
+                location:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                      example: 40.7128
+                    lon:
+                      type: number
+                      example: -74.0060
+      responses:
+        '201':
+          description: Item added successfully.
+  /items/{id}:
+    get:
+      summary: Get details of a specific item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Item ID.
+      responses:
+        '200':
+          description: Details of the item.
+    put:
+      summary: Update an item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Item ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Fresh Bread
+                category:
+                  type: string
+                  example: Food
+                description:
+                  type: string
+                  example: A loaf of fresh bread available for pickup.
+      responses:
+        '200':
+          description: Item updated successfully.
+    delete:
+      summary: Delete an item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Item ID.
+      responses:
+        '200':
+          description: Item deleted successfully.
