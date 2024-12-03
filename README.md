@@ -99,12 +99,23 @@ Add a new category (admin-only action).
 Request Body: name, description
 Response: Status code 201 with category ID and details.
 
+5. Favorites
+
+- GET /users/{id}/favorites
+Get user's favorite categories
+Response: Status code 200 with categories.
+
+- POST /users/{id}/favorites
+Add a favorite category for a user
+Request Body: UserId, category
+Response: Status code 201 with category ID and details.
+
 - DELETE /categories/{categoryId}
 Delete a category (admin-only action).
 Parameters: categoryId (path)
 Response: Status code 204 if successful.
 
-5. Notifications
+6. Notifications
 
 - GET /notifications
 Retrieve all notifications for the authenticated user.
