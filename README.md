@@ -30,100 +30,95 @@ In today's world, a lot of resources, especially food, go to waste while others 
 ## Open the `swagger/openapi.yaml` file in any Swagger editor:
 ## [Swagger Editor](https://editor.swagger.io/)
 
-## RESTFUL Resources
-1. Authentication and User Management
+# ShareHub API Documentation
 
-- POST /register
-Register a new user with required details (e.g., name, email, password).
-Request Body: name, email, password
-Response: Status code 201 if successful, with user ID and token.
+## 1. User Registration and Management (`/users`)
 
-- POST /login
-Authenticate a user and return a JWT token for authorized access.
-Request Body: email, password
-Response: Status code 200 with JWT token for session management.
+### **POST /users**
+- **Purpose**: Registers a new user on the platform.
+- **Request Body**: 
+  - `username`: The name of the user. (Example: `"johndoe"`)
+  - `password`: The user's password. (Example: `"password123"`)
+  - `email`: The user's email address. (Example: `"johndoe@example.com"`)
+- **Response**: 
+  - **201 Created**: User registered successfully.
 
-- POST /logout
-End the user session and invalidate the token.
-Response: Status code 200 if successful.
+### **GET /users**
+- **Purpose**: Fetches a list of all registered users in the system.
+- **Response**: 
+  - **200 OK**: A list of all users.
 
-2. Users
+---
 
-- GET /users/{userId}
-Retrieve a specific user’s profile information.
-Parameters: userId (path)
-Response: Status code 200 with user data (e.g., name, email, joinDate, location).
+## 2. User's Favorite Categories (`/users/{id}/favorites`)
 
-- PUT /users/{userId}
-Update the profile information of a user (must be authenticated).
-Parameters: userId (path)
-Request Body: Optional fields such as name, email, location, preferences
-Response: Status code 200 with updated user data.
+### **GET /users/{id}/favorites**
+- **Purpose**: Retrieves a list of categories that a particular user has marked as favorites.
+- **Path Parameter**: 
+  - `id`: The unique identifier of the user.
+- **Response**: 
+  - **200 OK**: A list of favorite categories for the specified user.
 
-3. Items
+### **POST /users/{id}/favorites**
+- **Purpose**: Adds a new category to the user's list of favorites.
+- **Path Parameter**: 
+  - `id`: The unique identifier of the user.
+- **Request Body**: 
+  - `category`: The name of the category to add as a favorite. (Example: `"Food"`)
+- **Response**: 
+  - **201 Created**: Favorite category added successfully.
 
-- POST /items
-Create a new item listing.
-Request Body: title, description, category, location, expiryDate, imageUrl (optional)
-Response: Status code 201 with newly created item ID and item details.
+---
 
-- GET /items
-Retrieve a list of items based on optional filters.
-Query Parameters: category, location, radius, dateRange
-Response: Status code 200 with a list of items matching filters.
+## 3. Items Management (`/items`)
 
-- GET /items/{itemId}
-Retrieve detailed information about a specific item.
-Parameters: itemId (path)
-Response: Status code 200 with item details.
+### **GET /items**
+- **Purpose**: Retrieves a list of all items available on the platform with optional filters.
+- **Query Parameters**:
+  - `keyword`: A search keyword to filter items by name or description. (Example: `"bread"`)
+  - `category`: Filter by item category. (Example: `"Food"`)
+  - `location`: Filter by location in latitude,longitude format. (Example: `"40.7128,-74.0060"`)
+- **Response**: 
+  - **200 OK**: A list of items matching the filters.
 
-- PUT /items/{itemId}
-Update an item (restricted to the item owner).
-Parameters: itemId (path)
-Request Body: Fields to update, such as title, description, category, location, expiryDate
-Response: Status code 200 with updated item details.
+### **POST /items**
+- **Purpose**: Adds a new item to the platform for sharing.
+- **Request Body**: 
+  - `name`: The name of the item. (Example: `"Fresh Bread"`)
+  - `category`: The category of the item. (Example: `"Food"`)
+  - `description`: A detailed description of the item. (Example: `"A loaf of fresh bread available for pickup."`)
+  - `location`: The location of the item in latitude and longitude format. (Example: `{"lat": 40.7128, "lon": -74.0060}`)
+- **Response**: 
+  - **201 Created**: Item added successfully.
 
-- DELETE /items/{itemId}
-Delete an item (restricted to the item owner).
-Parameters: itemId (path)
-Response: Status code 204 if successful.
+---
 
-4. Categories
+## 4. Item Details (`/items/{id}`)
 
-- GET /categories
-Retrieve a list of all available item categories.
-Response: Status code 200 with categories such as Food, Books, Clothes, etc.
+### **GET /items/{id}**
+- **Purpose**: Retrieves detailed information about a specific item.
+- **Path Parameter**: 
+  - `id`: The unique identifier of the item.
+- **Response**: 
+  - **200 OK**: Details of the requested item.
 
-- POST /categories
-Add a new category (admin-only action).
-Request Body: name, description
-Response: Status code 201 with category ID and details.
+### **PUT /items/{id}**
+- **Purpose**: Updates the details of a specific item.
+- **Path Parameter**: 
+  - `id`: The unique identifier of the item.
+- **Request Body**: 
+  - `name`: Updated name of the item. (Example: `"Fresh Bread"`)
+  - `category`: Updated category of the item. (Example: `"Food"`)
+  - `description`: Updated description of the item. (Example: `"A loaf of fresh bread available for pickup."`)
+- **Response**: 
+  - **200 OK**: Item updated successfully.
 
-5. Favorites
+### **DELETE /items/{id}**
+- **Purpose**: Deletes a specific item.
+- **Path Parameter**: 
+  - `id`: The unique identifier of the item.
+- **Response**: 
+  - **200 OK**: Item deleted successfully.
 
-- GET /users/{id}/favorites
-Get user's favorite categories
-Response: Status code 200 with categories.
-
-- POST /users/{id}/favorites
-Add a favorite category for a user
-Request Body: UserId, category
-Response: Status code 201 with category ID and details.
-
-- DELETE /categories/{categoryId}
-Delete a category (admin-only action).
-Parameters: categoryId (path)
-Response: Status code 204 if successful.
-
-6. Notifications
-
-- GET /notifications
-Retrieve all notifications for the authenticated user.
-Response: Status code 200 with a list of notifications (e.g., new item postings near the user).
-
-- DELETE /notifications/{notificationId}
-Delete a specific notification.
-Parameters: notificationId (path)
-Response: Status code 204 if successful.
 
 
