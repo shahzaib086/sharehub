@@ -1,0 +1,35 @@
+'use strict'
+
+module.exports = Object.freeze({
+    SUCCESS_STATUS : 'SUCCESS',
+    FAILURE_STATUS : 'FAILURE',
+
+    ROLE_SUPER_ADMIN: 1,    
+    ROLE_ADMIN: 2,
+    ROLE_USER: 3,
+
+    USER_STATUS_ACTIVE: 1,
+    USER_STATUS_INACTIVE: 0,
+
+    TOAST_SUCCESS : 'success',
+    TOAST_ERROR : 'error',
+
+    TOAST_SUCCESS_MSG : 'Successfull!',
+    TOAST_ERROR_MSG : 'Something went wrong, Please try again.',
+
+    DATATABLE_TIMESTAMP_FORMAT: 'DD MMM YYYY, hh:mm a',
+    DATATABLE_DATE_FORMAT: 'DD MMM YYYY',
+    EDIT_DATE_FORMAT: 'YYYY-MM-DD',
+
+    SIGNUP_STEP_ACCOUNT: 1,
+    SIGNUP_STEP_PROFILE_UPDATED: 2,
+
+
+    HTTP_SUCCESS: 200,
+    HTTP_BAD_REQUEST: 400,
+    HTTP_UNAUTHORIZED: 401,
+    HTTP_FORBIDDEN: 403,
+    HTTP_NOT_FOUND: 404,
+    HTTP_SERVER_ERROR: 500,
+
+});
