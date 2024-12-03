@@ -27,8 +27,8 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - Nour Zbitou
 - Muhammad Nasir
 
-- Open the `swagger/openapi.yaml` file in any Swagger editor:
-- [Swagger Editor](https://editor.swagger.io/)
+## Open the `swagger/openapi.yaml` file in any Swagger editor:
+## [Swagger Editor](https://editor.swagger.io/)
 
 ## RESTFUL Resources
 1. Authentication and User Management
