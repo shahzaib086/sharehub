@@ -17,7 +17,7 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - **User Registration and Authentication**: Secure login and registration to ensure a trusted community of users.
 - **Item Posting**: Users can post items, such as food, books, clothes, and more, for others to see.
 - **Categories and Filtering**: Items can be categorized and easily searched or filtered by type, making it convenient for users to find what they need.
-- **Location-Based Search**: Users can see available items near them to facilitate easy pickup.
+- **Favourites**: Users can add categories to their favourites and when there is any new item posted in that category user will be notified by push notifications.
 - **Notifications**: Notifications alert users when new items are posted in their area of interest.
 
 ## Group Members
@@ -26,6 +26,9 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - Syed Bilal Rashid
 - Nour Zbitou
 - Muhammad Nasir
+
+- Open the `swagger/openapi.yaml` file in any Swagger editor:
+- [Swagger Editor](https://editor.swagger.io/)
 
 ## RESTFUL Resources
 1. Authentication and User Management
@@ -112,10 +115,4 @@ Delete a specific notification.
 Parameters: notificationId (path)
 Response: Status code 204 if successful.
 
-6. Location-Based Searches
-
-- GET /search
-Search for items by location, radius, and category filters.
-Query Parameters: latitude, longitude, radius, category
-Response: Status code 200 with items that match the search criteria.
 
