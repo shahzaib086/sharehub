@@ -6,6 +6,10 @@ const createProfileRules = Joi.object({
     first_name: Joi.string().required(),
     last_name: Joi.string().required(),
     email: Joi.string().email().optional(),
+    position: Joi.string().required(),
+    hand_foot: Joi.string().required(),
+    age: Joi.number().integer().min(0).required(),
+    gender: Joi.string().valid('male', 'female').required(),
 });
   
 const validateCreateProfile = (req, res, next) => {

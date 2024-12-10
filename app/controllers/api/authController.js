@@ -9,29 +9,18 @@ const {sendOTPEmail} = require('../../helpers/email-module.js');
 
 
 const login = async (req, res) => {
-    let { login_type, email, country_code, phone_number, app_mode } = req.body;
+    let { login_type, email, country_code, phone_number } = req.body;
 
-    if (!app_mode || app_mode == '') {
+    if( (login_type == 'email') && (!email || email == '') ){
         res.json({
             status: status.FAILURE_STATUS,
-            message: "App mode is required.",            
+            message: "Email is required.",            
         });
-    }
-
-    if( login_type == 'email' ){
-        if (!email || email == '') {
-            res.json({
-                status: status.FAILURE_STATUS,
-                message: "Email is required.",            
-            });
-        }
-    } else {
-        if (!country_code || country_code == '' || !phone_number || phone_number == '') {
-            res.json({
-                status: status.FAILURE_STATUS,
-                message: "Phone number is required.",            
-            });
-        }
+    } else if (!country_code || country_code == '' || !phone_number || phone_number == '') {
+        res.json({
+            status: status.FAILURE_STATUS,
+            message: "Phone number is required.",            
+        });
     }
     
     try {
@@ -39,6 +28,7 @@ const login = async (req, res) => {
         const apiTokenModel = new ApiToken();
         const userModel = new User();
         let user = null;
+        let user_id = null;
         if( login_type == 'email' ){
             user = await userModel.getCollection().where({ email: email }).first("*");
         } else {
@@ -65,12 +55,13 @@ const login = async (req, res) => {
                 email,
                 fcm_token: apiTokenResult?.fcm_token ?? undefined,
                 status: status.USER_STATUS_ACTIVE,
-                role_id: (app_mode==status.APP_MODE_PLAYER)? status.ROLE_PLAYER : status.ROLE_FAN,
+                role_id: status.ROLE_USER,
                 otp_code,
                 otp_created_at
             }
 
             await userModel.updateById(id, updateData);
+            user_id = id
 
         } else {
 
@@ -90,20 +81,24 @@ const login = async (req, res) => {
                 signup_step, 
                 fcm_token: apiTokenResult?.fcm_token,
                 status: status.USER_STATUS_ACTIVE,
-                role_id: (app_mode==status.APP_MODE_PLAYER)? status.ROLE_PLAYER : status.ROLE_FAN,
+                role_id: status.ROLE_USEr,
                 otp_code,
                 otp_created_at
             }
 
             user = await userModel.getCollection().returning('id').insert(insertData);
-
+            user_id = user[0].id
         }
+
+        await apiTokenModel.getCollection().where({id:apiTokenResult.id}).update({
+            user_id: user_id
+        });
 
         res.json({
             status: status.SUCCESS_STATUS,
             message: 'User account created successfully!',
             data: {
-                user_id: user.id
+                user_id: user_id
             }
         });  
 
@@ -129,7 +124,7 @@ const verifyOTP = async(req, res) => {
     try {
 
         const userModel = new User();
-        const user = await userModel.getById(user_id);            
+        const user = await userModel.getById(user_id);   
         
         if(user && user.otp_code == otp_code) {
 

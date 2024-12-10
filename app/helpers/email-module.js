@@ -117,5 +117,4 @@ const sendForgotPasswordEmail = async (email,otp_code) => {
     return await emailProcessor(email, subject, template);
 }
 
-
-module.exports = {emailProcessor, sendOTPEmail, sendWelcomeEmail, sendForgotPasswordEmail};
+module.exports = {emailProcessor, sendOTPEmail, sendWelcomeEmail, sendAccountApprovedEmail, sendAccountRejectionEmail, sendForgotPasswordEmail};

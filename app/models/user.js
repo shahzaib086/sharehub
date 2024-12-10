@@ -7,8 +7,25 @@ const dayjs = require('dayjs');
 
 class User {
 
+    tableName = 'users';
+
+    playerProfileColumns = [
+        this.tableName+'.id',
+        this.tableName+'.first_name',
+        this.tableName+'.last_name',
+        this.tableName+'.email',
+        this.tableName+'.phone_number',
+        this.tableName+'.country_code',
+        this.tableName+'.age',
+        this.tableName+'.gender',
+        this.tableName+'.position',
+        this.tableName+'.hand_foot',
+        this.tableName+'.profile_image',
+        this.tableName+'.status',
+    ];
+
     constructor() {
-        this.tableName = 'users';
+        // this.tableName = 'users';
     }
 
     getCollection() {
