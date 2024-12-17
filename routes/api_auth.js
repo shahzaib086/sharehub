@@ -1,17 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-  login,
-  signup,
-  verifyOTP,
-  resendOTP
-} = require("../app/controllers/api/authController");
+const { 
+  validateSignup 
+} = require('../app/requests/userValidator.js');
+
+const authController = require("../app/controllers/api/authController");
 
 // Get Token
-router.post("/login", login);
-// router.post("/signup", signup);
-router.post("/verify-otp", verifyOTP);
-router.post("/resend-otp", resendOTP);
+router.post("/signup", validateSignup, authController.signup);
+router.post("/login", authController.login);
+router.post("/verify-otp", authController.verifyOTP);
+router.post("/resend-otp", authController.resendOTP);
 
 module.exports = router;

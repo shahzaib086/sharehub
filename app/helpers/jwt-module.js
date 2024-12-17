@@ -9,7 +9,7 @@ const publicKEY 	= fs.readFileSync('./keys/public.key', 'utf8'); 	// to verify J
 let status = require('./constants')
 
 var signOptions = {
-	issuer: 	"HOCKEY Authorizaxtion Bearer",	
+	issuer: 	"SHAREHUB Authorizaxtion Bearer",	
 	expiresIn: 	"365d",
 	algorithm: 	"RS256" // RSASSA options[ "RS256", "RS384", "RS512" ]
 };

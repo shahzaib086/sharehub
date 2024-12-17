@@ -1,106 +1,140 @@
 //js
 const status = require('../../helpers/constants.js');
 const utils = require('../../helpers/utility.js'); 
-const User = require('../../models/user.js');
-const ApiToken = require('../../models/apiToken.js');
-// const crypto = require('crypto');
+const User = require('../../models/userES.js');
+const dayjs = require('dayjs'); 
 const authToken = require('../../helpers/jwt-module.js')
-const {sendOTPEmail} = require('../../helpers/email-module.js');
+// const {sendOTPEmail} = require('../../helpers/email-module.js');
 
+const signup = async (req, res) => {
+    let { name, email, password, lat, lng } = req.body;
+
+    try {
+        const userModel = new User();
+
+        let checkEmail = await userModel.checkEmailExist(email);
+        if( checkEmail ){
+            return res.json({
+                status: status.FAILURE_STATUS,
+                message: "Email is already exist",            
+                data: {}
+            });
+        }
+
+        utils.cryptPassword(password, async(hashPassword) => {                      
+            if(hashPassword) {
+
+                let signup_step = status.SIGNUP_STEP_ACCOUNT;
+
+                //TODO: Temporary disable otp generation
+                // let otp_code = utils.generateOTP();
+                let otp_code = "1122";
+                let otp_created_at = utils.getFormatedDate()
+                
+                const insertData = {
+                    name, 
+                    email, 
+                    password: hashPassword, 
+                    lat,
+                    lng,
+                    role_id: status.ROLE_USER,
+                    otp_code,
+                    otp_created_at,
+                    status: status.USER_STATUS_ACTIVE,
+                    signup_step,
+                    is_email_verified: 0,
+                    email_verified_at: null,
+                    profile_image: '',
+                    joined_at: dayjs()
+                }
+
+                const userId = await userModel.create(insertData);
+                if (userId) {
+
+                    return res.json({
+                        status: status.SUCCESS_STATUS,
+                        message: 'Account created successfully! Please verify your email address to continue.',						
+                        data: {
+                            // auth_token: auth_token,
+                            user_id: userId
+                        }
+                    });
+                            
+                } else {
+                    return res.json({
+                        status: status.FAILURE_STATUS,
+                        message: 'Failed to create account!',						
+                        data: {}
+                    });
+                }                        
+            } 
+        });
+
+    } catch (error) {
+        return res.json({
+            status: status.FAILURE_STATUS,
+            message: error.message,						                
+            data: {}
+        });      
+    }
+}
 
 const login = async (req, res) => {
-    let { login_type, email, country_code, phone_number } = req.body;
+    let { email, password } = req.body;
 
-    if( (login_type == 'email') && (!email || email == '') ){
-        res.json({
+    if((!email || email == '')){
+        return res.json({
             status: status.FAILURE_STATUS,
             message: "Email is required.",            
         });
-    } else if (!country_code || country_code == '' || !phone_number || phone_number == '') {
-        res.json({
+    } else if ((!password || password == '')) {
+        return res.json({
             status: status.FAILURE_STATUS,
-            message: "Phone number is required.",            
+            message: "Password is required.",            
         });
     }
     
     try {
 
-        const apiTokenModel = new ApiToken();
         const userModel = new User();
-        let user = null;
-        let user_id = null;
-        if( login_type == 'email' ){
-            user = await userModel.getCollection().where({ email: email }).first("*");
-        } else {
-            user = await userModel.getCollection().where({ phone_number: phone_number }).first("*");
-        }
-
-        //Getting x-api-token from header and update fcm token to user
-        let api_token = req.api_token;
-        let apiTokenResult = await apiTokenModel.getCollection().where({token:api_token}).first();
+        let user = await userModel.getByEmail(email);
 
         if(user) {
             
             let id = user.id;  
+            utils.comparePassword(password, user.password, async (isPasswordMatch) => {                        
+                if(isPasswordMatch) {
+                    let d = user;
+                    let auth_token = authToken.generate({
+                        id: id, 
+                        email, 
+                        password
+                    })            
+                    d.access_token = auth_token
+                    d.password = undefined;
 
-            //TODO: Temporary disable otp generation
-            // let otp_code = utils.generateOTP();
-            let otp_code = "1122";
-            let otp_created_at = utils.getFormatedDate()
+                    res.json({
+                        status: status.SUCCESS_STATUS,
+                        message: 'User LoggedIn Successfully!',
+                        data: d
+                    });                                
+                    
+                } else {
+                    res.json({
+                        status: status.FAILURE_STATUS,
+                        message: 'Incorrect Email/Password',	
+                        data : {}
+                    });
+                }
+            });                             
             
-            //TODO: temporary disable email sent service
-            // const result = await sendOTPEmail(email, otp_code);
-
-            const updateData = {
-                email,
-                fcm_token: apiTokenResult?.fcm_token ?? undefined,
-                status: status.USER_STATUS_ACTIVE,
-                role_id: status.ROLE_USER,
-                otp_code,
-                otp_created_at
-            }
-
-            await userModel.updateById(id, updateData);
-            user_id = id
-
         } else {
-
-            let signup_step = status.SIGNUP_STEP_ACCOUNT;
-
-            //TODO: Temporary disable otp generation
-            // let otp_code = utils.generateOTP();
-            let otp_code = "1122";
-            let otp_created_at = utils.getFormatedDate()
-            
-            //TODO: temporary disable email sent service
-            // const result = await sendOTPEmail(email, otp_code);
-
-            const insertData = {
-                email,
-                password: "",
-                signup_step, 
-                fcm_token: apiTokenResult?.fcm_token,
-                status: status.USER_STATUS_ACTIVE,
-                role_id: status.ROLE_USEr,
-                otp_code,
-                otp_created_at
-            }
-
-            user = await userModel.getCollection().returning('id').insert(insertData);
-            user_id = user[0].id
-        }
-
-        await apiTokenModel.getCollection().where({id:apiTokenResult.id}).update({
-            user_id: user_id
-        });
-
-        res.json({
-            status: status.SUCCESS_STATUS,
-            message: 'User account created successfully!',
-            data: {
-                user_id: user_id
-            }
-        });  
+            res.json({
+                status: status.FAILURE_STATUS,
+                message: 'Incorrect Email/Password',		
+                data: {}
+            });
+        } 
 
     } catch (error) {
         return res.json({
@@ -125,36 +159,36 @@ const verifyOTP = async(req, res) => {
 
         const userModel = new User();
         const user = await userModel.getById(user_id);   
-        
+
         if(user && user.otp_code == otp_code) {
 
             let id = user.id;
-            let otp_code = null;
-            
-            const users = await userModel.updateById(id,{ otp_code });
+            let updateData = {
+                otp_code: null, 
+                email_verified_at: dayjs()
+            }
+            const users = await userModel.updateById(id, updateData);
             if (users.length !== 0) {
-
                 let d = user;
                 let email = user.email;
                 let auth_token = authToken.generate({
                     id: id, 
-                    email
+                    email,
+                    password: user.password
                 })            
                 d.access_token = auth_token
                 d.password = undefined;
 
-                res.json({
+                return res.json({
                     status: status.SUCCESS_STATUS,
                     message: 'Logged in successfully!',						                                    
                     data: {
                         user: d,
-                        redirect_screen: (user.signup_step==status.SIGNUP_STEP_ACCOUNT) ? 'complete_profile' : 'home',
-                        signup_step: user.signup_step
                     }
                 });
                         
             } else {
-                res.json({
+                return res.json({
                     status: status.FAILURE_STATUS,
                     message: 'Failed to verify otp!',						
                     data: {}
@@ -163,7 +197,7 @@ const verifyOTP = async(req, res) => {
 
         } else {
 
-            res.json({
+            return res.json({
                 status: status.FAILURE_STATUS,
                 message: 'Invalid OTP',						                    
                 data: {}
@@ -201,9 +235,6 @@ const resendOTP = async(req, res) => {
             // let otp_code = utils.generateOTP();
             let otp_code = "1122";
             let otp_created_at = utils.getFormatedDate()
-            
-            //TODO: temporary disable email sent service
-            // const result = await sendOTPEmail(email, otp_code);
             
             const users = await userModel.getCollection().where({ id })
             .update({ otp_code, otp_created_at }, ["id"]);
@@ -243,6 +274,7 @@ const resendOTP = async(req, res) => {
 }
 
 module.exports =  {
+    signup,
     login,
     verifyOTP,
     resendOTP,

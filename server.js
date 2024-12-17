@@ -47,13 +47,10 @@ app.use('/api/v1/', apiTokenRouter);
 app.use('/api/v1/', verifyApiToken, authApiRouter);
 app.use('/api/v1/', verifyApiToken, verifyAuthToken, apiRouter);
 
-
-
 app.get('/', async function (req, res) {	
-  	res.send(`HOCKEY API Server Running on port ${PORT}!`);
+  	res.send(`SHAREHUB API Server Running on port ${PORT}!`);
 });
 
-
 app.listen(PORT, function () {
-  	console.log(`HOCKEY API Server listening on port ${PORT}!`);
+  	console.log(`SHAREHUB API Server listening on port ${PORT}!`);
 });

@@ -1,89 +1,51 @@
 //js
 const status = require('../../helpers/constants.js');
 const utils = require('../../helpers/utility.js'); 
-const User = require('../../models/user.js');
-const {sendOTPEmail} = require('../../helpers/email-module.js');
-const multer = require('multer');
+// const User = require('../../models/user.js');
+const Category = require('../../models/categoryES.js');
+// const {sendOTPEmail} = require('../../helpers/email-module.js');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-       cb(null, './assets/profile/');
-    },    
-    filename: function (req, file, cb) {
-        const fileExtension = file.originalname.split('.').pop(); // Get the file extension
-        const uniqueFileName = `${utils.uuid4()}.${fileExtension}`;
-        cb(null, uniqueFileName);
-    }
-});
 
-const uploadAvatar = multer({
-    storage: storage,
-    // limits: {
-    //     fileSize: 1024 * 1024 * 10
-    // },      
-    }).fields(
-    [
-        {
-            name:'profile_image',
-            maxCount: 1
-        },			
-    ]
-);
-
-const createProfile = async (req, res) => {
-    let { 
-        first_name, 
-        last_name, 
-        email,
-        country_code,
-        phone_number,
-        position,
-        hand_foot,
-        age,
-        gender,
-    } = req.body;
-    let { profile_image } = req.files;
+const seedCategories = async (req, res) => {
 
     try {
-        const userModel = new User();
-        let user = req.session.auth;
-        let checkEmail = await userModel.checkEmailExist(email,user);
-        if( checkEmail ){
-            return res.status(status.HTTP_BAD_REQUEST).json({
-                status: status.FAILURE_STATUS,
-                message: 'Email is already exist',
-                data: {},
-            });
-        }
+        const categoryModel = new Category();
 
-        let image = profile_image ? '/assets/profile/' + profile_image[0].filename : undefined;
-        const updateData = {
-            first_name, 
-            last_name, 
-            email,
-            country_code,
-            phone_number,
-            position,
-            hand_foot,
-            age,
-            gender,
-            profile_image: image,
-            signup_step: status.SIGNUP_STEP_PROFILE_UPDATED
-        };  
+        const insertData = [
+            { name: "Food" },
+            { name: "Clothing" },
+            { name: "Books" },
+            { name: "Electronics" },
+            { name: "Furniture" },
+            { name: "Toys" },
+            { name: "Stationery" },
+            { name: "Appliances" },
+            { name: "Household Items" },
+            { name: "Tools" },
+            { name: "Services" },
+            { name: "Gardening" },
+            { name: "Pet Supplies" },
+            { name: "Health & Wellness" },
+            { name: "Office Supplies" },
+            { name: "Travel Items" },
+            { name: "Events & Activities" }
+        ];
 
-        await userModel.updateById(user.id, updateData);
-        const updatedUser = await userModel.getById(user.id);
-
-        return res.status(status.HTTP_SUCCESS).json({
+        const userId = await categoryModel.createBulk(insertData);
+        
+        return res.json({
             status: status.SUCCESS_STATUS,
-            message: 'Profile created sucessfully',						                
+            message: 'Account created successfully! Please verify your email address to continue.',						
             data: {
-                user: updatedUser
+                // auth_token: auth_token,
+                user_id: userId
             }
-        }); 
+        });
+                    
+           
 
     } catch (error) {
-        return res.status(status.HTTP_SERVER_ERROR).json({
+        return res.json({
             status: status.FAILURE_STATUS,
             message: error.message,						                
             data: {}
@@ -92,6 +54,5 @@ const createProfile = async (req, res) => {
 }
 
 module.exports =  {
-    createProfile,
-    uploadAvatar
+    seedCategories,
 };

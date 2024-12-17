@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 // Define rules for each entity
 const rules = {
-  signup: Joi.object({
+  createItem: Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -27,5 +27,5 @@ const validate = (schema) => (req, res, next) => {
 
 // Export validation middlewares
 module.exports = {
-  validateSignup: validate(rules.signup),
+  validateCreateItem: validate(rules.createItem),
 };
