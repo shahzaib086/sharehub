@@ -5,16 +5,25 @@ const router = express.Router();
 const userController = require("../app/controllers/api/userController");
 // const itemController = require("../app/controllers/api/itemController");
 
-// Request validators
-// const { 
-//   validateCreateProfile 
-// } = require('../app/requests/userValidator.js');
+
+const { 
+  validateCreatePost 
+} = require('../app/requests/itemValidator.js');
+
+const itemController = require("../app/controllers/api/itemController");
 
 
 // // Routes
 router.get(
   "/category/seed", 
   userController.seedCategories
+);
+
+router.post(
+  "/post/create", 
+  itemController.uploadItemImage,
+  validateCreatePost,
+  itemController.createItem
 );
 
 module.exports = router;

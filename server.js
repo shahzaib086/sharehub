@@ -36,18 +36,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(assetMiddleware);
 app.use('/assets', express.static(path.join(__dirname, 'assets')))
+const {adminAuth} = require('./app/middleware/adminAuth.js');
 
 
 // ========= Api Router ========= //
 const apiTokenRouter = require('./routes/api_token.js');;
 const authApiRouter = require('./routes/api_auth.js');
 const apiRouter = require('./routes/api.js');
+const viewRouter = require('./routes/view.js');
 
 app.use('/api/v1/', apiTokenRouter);
-app.use('/api/v1/', verifyApiToken, authApiRouter);
-app.use('/api/v1/', verifyApiToken, verifyAuthToken, apiRouter);
+// app.use('/api/v1/', verifyApiToken, authApiRouter);
+// app.use('/api/v1/', verifyApiToken, verifyAuthToken, apiRouter);
 
-app.get('/', async function (req, res) {	
+app.use('/api/v1/', authApiRouter);
+app.use('/api/v1/', adminAuth, apiRouter);
+
+app.use('/', adminAuth, viewRouter);
+
+app.get('/test', async function (req, res) {	
   	res.send(`SHAREHUB API Server Running on port ${PORT}!`);
 });
 
