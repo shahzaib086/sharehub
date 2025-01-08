@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head'); %>
+  </head>
+  <body id="section_2">
+    <nav class="navbar navbar-expand-lg bg-white shadow-lg">
+      <div class="container">
+        <a href="/home" class="navbar-brand"
+          >Sharin<span class="text-danger">GO</span></a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <% if (auth && auth.name) { %>
+            <li class="nav-item">
+              <button
+                class="nav-link click-scroll logout-btn"
+                onclick="createPost()"
+              >
+                <small class="small-title"
+                  ><strong class="text-warning">02</strong></small
+                >
+                Create Post
+              </button>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#">
+                <small class="small-title"
+                  ><strong class="text-warning">01</strong></small
+                >
+                My Account
+              </a>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link click-scroll logout-btn"
+                onclick="logout()"
+              >
+                <small class="small-title"
+                  ><strong class="text-warning">02</strong></small
+                >
+                LOGOUT
+              </button>
+            </li>
+            <form
+              id="logoutForm"
+              action="/api/v1/logout"
+              method="POST"
+              style="display: none"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="your_csrf_token_here"
+              />
+            </form>
+            <% } else { %>
+            <li class="nav-item">
+              <button
+                class="nav-link click-scroll logout-btn"
+                onclick="login()"
+              >
+                <small class="small-title"
+                  ><strong class="text-warning">01</strong></small
+                >
+                Login
+              </button>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="#gettingStarted">
+                <small class="small-title"
+                  ><strong class="text-warning">02</strong></small
+                >
+                Sign Up
+              </a>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="section-padding" id="productListing">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 text-center mb-5">
+              <small class="small-title">Explore</small>
+              <h2>Product Listings</h2>
+            </div>
+          </div>
+          <div class="row">
+            <% Array.from({ length: 15 }, (_, i) => i + 1).forEach(product => {
+            %>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div class="card product_card shadow-lg h-100 ">
+                <img
+                  src="https://placehold.co/600x400"
+                  class="card-img-top"
+                  alt="product image"
+                />
+                <div class="card-body">
+                  <a href="#">
+                    <h5 class="card-title text-warning">
+                      Product <% product %>
+                    </h5>
+                  </a>
+                  <p class="card-text">
+                    <strong>Category:</strong> Category<br />
+                    <strong>Owner:</strong> Owner name
+                  </p>
+                </div>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include('partials/footer'); %>
+  </body>
+</html>
