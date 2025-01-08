@@ -2,6 +2,7 @@
 const status = require('../../helpers/constants.js');
 const utils = require('../../helpers/utility.js'); 
 const Post = require('../../models/postES.js');
+const User = require('../../models/userES.js');
 const Category = require('../../models/categoryES.js');
 // const {sendOTPEmail} = require('../../helpers/email-module.js');
 const dayjs = require('dayjs');
@@ -36,15 +37,16 @@ const createItem = async (req, res) => {
     let { title, price, pickup_address, description, expiry_date, category_id } = req.body;
 
     try {
+        const user = req.session.auth;
+        let { image } = req.files;
+
         const postModel = new Post();
         const categoryModel = new Category();
         const category = await categoryModel.getById(category_id);
 
-        const user = req.session.auth;
-        let { image } = req.files;
-
         const insertData = {
             title, 
+            username: user.name,
             type:'sell', 
             price: price ?? 0,
             category_id,
@@ -57,7 +59,7 @@ const createItem = async (req, res) => {
             labels:[],
             is_sold:0,
             status: 1,
-            image: image,
+            image: '/assets/posts/'+image[0].filename,
             created_at: dayjs(),
             updated_at: dayjs(),
             created_by_id: user.id
@@ -89,7 +91,50 @@ const createItem = async (req, res) => {
     }
 }
 
+const getPosts = async (req, res) => {
+    try {
+        let { page = 1, limit = 10, category_id = null, keyword = null } = req.body;
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        const postModel = new Post();
+        const filters = {
+            page: page,
+            limit: limit,
+            category_id: category_id, // Optional
+            keyword: keyword     // Optional
+        };
+
+        const result = await postModel.getPaginatedPosts(filters);
+        console.log(result);
+
+        return res.json({
+            status: status.SUCCESS_STATUS,
+            message: 'Posts retrieved successfully.',
+            data: {
+                posts: result.posts,
+                pagination: {
+                    total: result.pagination.totalPosts,
+                    currentPage: result.pagination.page,
+                    totalPages: Math.ceil(result.pagination.totalPosts / result.pagination.limit),
+                    limit
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching paginated posts:", error);
+        return res.json({
+            status: status.FAILURE_STATUS,
+            message: 'Failed to retrieve posts!',
+            data: {}
+        });
+    }
+};
+
+
 module.exports =  {
     createItem,
-    uploadItemImage
+    uploadItemImage,
+    getPosts
 };
