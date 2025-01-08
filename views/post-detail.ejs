@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head'); %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body id="section_3">
+    <nav class="navbar navbar-expand-lg bg-white shadow-lg">
+      <div class="container">
+        <a href="/home" class="navbar-brand"
+          >Sharin<span class="text-danger">GO</span></a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <button class="nav-link click-scroll logout-btn" onclick="login()">
+                Login
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="section-padding" id="productDetail">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 text-center mb-5">
+              <small class="small-title badge badge-category">Product Details</small>
+              <h2 id="product-title"></h2>
+            </div>
+          </div>
+          <div class="row product_detail_wrap p-4">
+            <!-- Product Image -->
+            <div class="col-lg-6 col-md-12 mb-4">
+              <div class="product-image-wrap">
+                <img
+                  id="product-image"
+                  src=""
+                  alt="Product Image"
+                  class="img-fluid shadow-sm"
+                />
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-lg-6 col-md-12">
+              <div class="product-detail p-4 pt-0">
+                <h4 class="text-warning mb-4">Details</h4>
+                <p id="product-details" class="mb-4"></p>
+                <hr />
+                <div id="product-meta" class="product-meta"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include('partials/footer'); %>
+
+    <script>
+      // Dummy data for the product
+      const product = {
+        title: "Wireless Bluetooth Speaker",
+        type: "Electronics",
+        price: 50,
+        pickup_address: "123 Main Street, Cityville",
+        description:
+          "High-quality wireless Bluetooth speaker with excellent sound clarity and deep bass. Compact design, perfect for travel.",
+        expiry_date: "2025-01-31",
+        image: "https://placehold.co/600x400",
+        created_at: "2025-01-01",
+        username: "john_doe",
+        category: "Audio Equipment",
+      };
+
+      // Populate the page with product details using jQuery
+      $(document).ready(function () {
+        $("#product-title").text(product.title);
+        $("#product-image").attr("src", product.image);
+        $("#product-image").attr("alt", product.title);
+
+        $("#product-details").html(`
+          <span class="form_label">Type:</span> ${product.type}<br />
+          <span class="form_label">Price:</span> $${product.price}<br />
+          <span class="form_label">Pickup Address:</span> ${product.pickup_address}<br />
+          <span class="form_label">Expiry Date:</span> ${product.expiry_date}<br />
+          <br />
+          <span class="form_label">Description:</span><br />
+          ${product.description}
+        `);
+
+        $("#product-meta").html(`
+          <span class="badge badge-category">${product.category}</span>
+          <span class="badge badge-username">Posted by: ${product.username}</span>
+          <br />
+          <small class="form_label">Created At:</small> ${new Date(
+            product.created_at
+          ).toLocaleDateString()}
+        `);
+      });
+    </script>
+</html>

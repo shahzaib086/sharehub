@@ -43,9 +43,19 @@ const listingPage = async (req, res) => {
   }
 };
 
+const productDetailPage = async (req, res) => {
+  const user = req.session.auth;
+  if (user) {
+    return res.render("post-detail");
+  } else {
+    return res.render("post-detail");
+  }
+};
+
 module.exports = {
   loginPage,
   home,
   createPostPage,
   listingPage,
+  productDetailPage,
 };
