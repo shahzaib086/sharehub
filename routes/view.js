@@ -17,5 +17,6 @@ router.get("/home", frontViewController.home);
 router.get("/listing", frontViewController.listingPage);
 
 router.get("/createpost", frontViewController.createPostPage);
+router.get("/post/:postId", frontViewController.createPostPage);
 
 module.exports = router;

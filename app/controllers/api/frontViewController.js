@@ -45,9 +45,21 @@ const listingPage = async (req, res) => {
   }
 };
 
+const postPage = async (req, res) => {
+  const user = req.session.auth;
+  if (user) {
+    const categoryModel = new Category();
+    const categories = await categoryModel.getAll();
+    return res.render("listing", { categories });
+  } else {
+    return res.redirect("/home");
+  }
+};
+
 module.exports = {
   loginPage,
   home,
   createPostPage,
   listingPage,
+  postPage,
 };
