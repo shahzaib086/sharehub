@@ -2,6 +2,7 @@
 const status = require('../../helpers/constants.js');
 const utils = require('../../helpers/utility.js'); 
 const Post = require('../../models/postES.js');
+const Category = require('../../models/categoryES.js');
 // const {sendOTPEmail} = require('../../helpers/email-module.js');
 const dayjs = require('dayjs');
 const multer = require('multer');
@@ -32,10 +33,12 @@ const uploadItemImage = multer({
 );
 
 const createItem = async (req, res) => {
-    let { title, price, pickup_address, description, expiry_date } = req.body;
+    let { title, price, pickup_address, description, expiry_date, category_id } = req.body;
 
     try {
         const postModel = new Post();
+        const categoryModel = new Category();
+        const category = await categoryModel.getById(category_id);
 
         const user = req.session.auth;
         let { image } = req.files;
@@ -43,7 +46,9 @@ const createItem = async (req, res) => {
         const insertData = {
             title, 
             type:'sell', 
-            price,
+            price: price ?? 0,
+            category_id,
+            category: category.name,
             pickup_address,
             description,
             expiry_date,

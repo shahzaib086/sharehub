@@ -19,6 +19,11 @@ router.get(
   userController.seedCategories
 );
 
+router.get(
+  "/category", 
+  userController.getCategories
+);
+
 router.post(
   "/post/create", 
   itemController.uploadItemImage,

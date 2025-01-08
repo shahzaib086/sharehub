@@ -6,6 +6,7 @@ const rules = {
   createPost: Joi.object({
     title: Joi.string().required(),
     price: Joi.string().required(),
+    category_id: Joi.string().required(),
     pickup_address: Joi.string().required(),
     description: Joi.string().required(),
     expiry_date: Joi.string().required(),

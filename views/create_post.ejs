@@ -85,7 +85,16 @@
                                 
                                         <!-- Price -->
                                         <div class="col-12 mb-3">
-                                            <input type="number" name="price" id="price" class="form-control" placeholder="Price (optional)">
+                                            <input type="number" name="price" id="price" class="form-control" placeholder="Price ($) (optional)">
+                                        </div>
+
+                                        <div class="col-12 mb-3">
+                                            <select name="category_id" id="category_id" class="form-control" required>
+                                                <option value="" disabled selected>Select Category</option>
+                                                <% categories.forEach(function(category) { %>
+                                                    <option value="<%= category.id %>"><%= category.name %></option>
+                                                <% }) %>
+                                            </select>
                                         </div>
                                 
                                         <!-- Pickup Address -->
@@ -148,9 +157,10 @@
             const pickup_address = $('#pickup_address').val().trim();
             const description = $('#description').val().trim();
             const expiry_date = $('#expiry_date').val().trim();
+            const category_id = $('#category_id').val().trim();
             const image = $('#image')[0].files[0]; // Get the uploaded image
 
-            if (!title || !pickup_address || !description || !expiry_date) {
+            if (!title || !pickup_address || !description || !expiry_date || !category_id) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Missing Fields',
@@ -165,6 +175,7 @@
             formData.append('pickup_address', pickup_address);
             formData.append('description', description);
             formData.append('expiry_date', expiry_date);
+            formData.append('category_id', category_id);
             if (image) {
                 formData.append('image', image);
             }

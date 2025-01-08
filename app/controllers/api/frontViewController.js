@@ -8,7 +8,6 @@ const Category = require('../../models/categoryES.js');
 
 const home = async (req, res) => {
     const user = req.session.auth;
-    console.log("HOME PAGE user",user)
     if( user ){
         return res.render("home");
     } else {
@@ -19,7 +18,6 @@ const home = async (req, res) => {
 
 const loginPage = async (req, res) => {
     const user = req.session.auth;
-    console.log("LOGIN PAGE user",user)
     if( user ){
         return res.redirect('/home');
     } else {
@@ -29,9 +27,10 @@ const loginPage = async (req, res) => {
 
 const createPostPage = async (req, res) => {
     const user = req.session.auth;
-    console.log("TEST USEr",user)
     if( user ){
-        return res.render("create_post");
+        const categoryModel = new Category();
+        const categories = await categoryModel.getAll();
+        return res.render("create_post",{categories});
     } else {
         return res.redirect('/login');
     }
