@@ -27,37 +27,81 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        
                         <% if (auth && auth.name) { %>
-
                         <li class="nav-item">
-                            <button class="nav-link click-scroll logout-btn" onclick="createPost()"><small class="small-title"><strong class="text-warning">02</strong></small> Create Post</button>
+                            <button
+                              class="nav-link click-scroll logout-btn"
+                              onclick="explorePage()"
+                            >
+                              <small class="small-title"
+                                ><strong class="text-warning">00</strong></small
+                              >
+                              Explore
+                            </button>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="#"><small class="small-title"><strong class="text-warning">01</strong></small> My Account</a>
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="createPost()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Create Post
+                          </button>
                         </li>
-
                         <li class="nav-item">
-                            <button class="nav-link click-scroll logout-btn" onclick="logout()"><small class="small-title"><strong class="text-warning">02</strong></small> LOGOUT</button>
+                          <a class="nav-link click-scroll" href="#">
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            My Account
+                          </a>
                         </li>
-
-                        <form id="logoutForm" action="/api/v1/logout" method="POST" style="display: none;">
-                            <input type="hidden" name="csrf_token" value="your_csrf_token_here">
+                        <li class="nav-item">
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="logout()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            LOGOUT
+                          </button>
+                        </li>
+                        <form
+                          id="logoutForm"
+                          action="/api/v1/logout"
+                          method="POST"
+                          style="display: none"
+                        >
+                          <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="your_csrf_token_here"
+                          />
                         </form>
-
                         <% } else { %>
-
                         <li class="nav-item">
-                            <button class="nav-link click-scroll logout-btn" onclick="login()"><small class="small-title"><strong class="text-warning">01</strong></small> Login</button>
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="login()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Login
+                          </button>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link click-scroll" href="#gettingStarted"><small class="small-title"><strong class="text-warning">02</strong></small> Sign Up</a>
+                          <a class="nav-link click-scroll" href="#gettingStarted">
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Sign Up
+                          </a>
                         </li>
-
                         <% } %>
-
                     </ul>
                 <div>
                         
@@ -216,6 +260,7 @@
             });
         });
     });
+
 </script>
 
 

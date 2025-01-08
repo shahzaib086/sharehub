@@ -37,9 +37,11 @@ const createPostPage = async (req, res) => {
 const listingPage = async (req, res) => {
   const user = req.session.auth;
   if (user) {
-    return res.redirect("/listing");
+    const categoryModel = new Category();
+    const categories = await categoryModel.getAll();
+    return res.render("listing", { categories });
   } else {
-    return res.render("listing");
+    return res.redirect("/home");
   }
 };
 

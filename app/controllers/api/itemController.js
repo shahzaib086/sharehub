@@ -106,7 +106,6 @@ const getPosts = async (req, res) => {
         };
 
         const result = await postModel.getPaginatedPosts(filters);
-        console.log(result);
 
         return res.json({
             status: status.SUCCESS_STATUS,
