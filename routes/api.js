@@ -31,4 +31,9 @@ router.post(
   itemController.createItem
 );
 
+router.post(
+  "/posts", 
+  itemController.getPosts
+);
+
 module.exports = router;

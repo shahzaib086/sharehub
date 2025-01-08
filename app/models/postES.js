@@ -19,6 +19,9 @@ class Post {
         'created_at',
         'updated_at',
         'created_by_id',
+        'username',
+        'category_id',
+        'category',
     ]
 
     constructor() {
@@ -70,39 +73,72 @@ class Post {
         }
     }
 
-    async checkEmailExist(email, userId = null) {
+    async getPaginatedPosts({ page = 1, limit = 10, category_id = null, keyword = null }) {
         try {
-
             const queryBody = {
+                from: (page - 1) * limit,
+                size: limit,
                 query: {
                     bool: {
-                        must: [
-                            { term: { "email.keyword": email } }
-                        ],
-                        must_not: userId ? [
-                            { term: { _id: userId } }
-                        ] : []
+                        must: [],
+                        filter: [
+                            { term: { status: 1 } }
+                        ]
                     }
-                }
+                },
+                sort: [{ created_at: { order: "desc" } }]
             };
+    
+            if (category_id) {
+                queryBody.query.bool.filter.push({ term: { "category_id.keyword": category_id } });
+            }
+    
+            if (keyword) {
+                queryBody.query.bool.must.push({
+                    multi_match: {
+                        query: keyword,
+                        fields: ["title^2", "username"],
+                        fuzziness: "AUTO",
+                        operator: "or"
+                    }
+                });
+            }
     
             const result = await elasticDB.search({
                 index: this.tableName,
-                body: queryBody,
-                size: 1
+                body: queryBody
             });
-
-            if (result.body.hits.total.value > 0) {
-                return result.body.hits.hits[0]._source;
-            }
     
-            return null;
-        } catch (err) {
-            console.error("Error:", err);
-            return null;
+            const posts = result.body.hits.hits.map(hit => {
+                const data = hit._source;
+                data.id = hit._id;
+                return data;
+            });
+    
+            return {
+                posts,
+                pagination: {
+                    total: result.body.hits.total.value,
+                    currentPage: page,
+                    totalPages: Math.ceil(result.body.hits.total.value / limit),
+                    limit
+                }
+            };
+    
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+            return {
+                posts: [],
+                pagination: {
+                    total: 0,
+                    currentPage: page,
+                    totalPages: 0,
+                    limit
+                }
+            };
         }
     }
-
+    
 }
 
 module.exports = Post;
