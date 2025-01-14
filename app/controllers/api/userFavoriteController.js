@@ -1,10 +1,11 @@
+const UserFavorite = require('../../models/userFavoriteES');
 const Category = require('../../models/userFavoriteES');
-const categoryModel = new Category();
+const user_favorite_Model = new UserFavorite();
 
 const getFavorites = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const favoriteItems = await categoryModel.getFavoriteItemsByUserId(userId);
+        const favoriteItems = await user_favorite_Model.getFavoriteItemsByUserId(userId);
 
         return res.json({
             status: 'SUCCESS',

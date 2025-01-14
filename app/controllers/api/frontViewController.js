@@ -65,8 +65,7 @@ const favoritesPage = async (req, res) => {
     try {
       const userId = user.id;
       const userFavoriteModel = new UserFavorite();
-      const favorites = await userFavoriteModel.getFavoritesByUserId(userId);
-
+      const favorites = await userFavoriteModel.getFavoriteItemsByUserId(userId);
       return res.render("favorites", { favorites });
     } catch (error) {
       console.error("Error fetching favorites:", error);
