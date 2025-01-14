@@ -75,6 +75,16 @@ const favoritesPage = async (req, res) => {
   } else {
     return res.redirect("/login");
   }
+}
+const createFavorite = async (req, res) => {
+  const user = req.session.auth;
+  if (user) {
+    const categoryModel = new Category();
+    const categories = await categoryModel.getAll();
+    return res.render("add_favorite",{categories});
+  } else {
+    return res.redirect("/home");
+  }
 };
 
 module.exports = {
@@ -84,4 +94,5 @@ module.exports = {
   listingPage,
   productDetailPage,
   favoritesPage, 
+  createFavorite,
 };

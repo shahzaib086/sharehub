@@ -22,4 +22,6 @@ router.get("/createpost", frontViewController.createPostPage);
 router.get("/post/:postId", frontViewController.createPostPage);
 router.get("/favorites", frontViewController.favoritesPage);
 
+router.get("/create-favorite", frontViewController.createFavorite);
+
 module.exports = router;
