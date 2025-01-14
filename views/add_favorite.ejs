@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <%- include('partials/head'); %>
+
+        <style>
+
+            .body_doodle {
+                background: url(images/bg3.jpg) !important;
+                background-size: 200px 200px !important;
+            }
+
+        </style>
+
+    </head>
+    
+    <body id="section_1">
+
+        <nav class="navbar navbar-expand-lg bg-white shadow-lg">
+            <div class="container">
+
+                <a href="/home" class="navbar-brand">Sharin<span class="text-danger">GO</span></a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <% if (auth && auth.name) { %>
+                        <li class="nav-item">
+                            <button
+                              class="nav-link click-scroll logout-btn"
+                              onclick="explorePage()"
+                            >
+                              <small class="small-title"
+                                ><strong class="text-warning">00</strong></small
+                              >
+                              Explore
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="createPost()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Create Post
+                          </button>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link click-scroll" href="#">
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            My Account
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="logout()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            LOGOUT
+                          </button>
+                        </li>
+                        <form
+                          id="logoutForm"
+                          action="/api/v1/logout"
+                          method="POST"
+                          style="display: none"
+                        >
+                          <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="your_csrf_token_here"
+                          />
+                        </form>
+                        <% } else { %>
+                        <li class="nav-item">
+                          <button
+                            class="nav-link click-scroll logout-btn"
+                            onclick="login()"
+                          >
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Login
+                          </button>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link click-scroll" href="#gettingStarted">
+                            <small class="small-title"
+                              ><strong class="text-warning">00</strong></small
+                            >
+                            Sign Up
+                          </a>
+                        </li>
+                        <% } %>
+                    </ul>
+                <div>
+                        
+            </div>
+        </nav>
+
+        <main>
+
+            <section class="about section-padding pt-5 body_doodle" id="gettingStarted">
+                <div class="container">
+                    <div class="row d-flex flex-column justify-content-center align-items-center">
+
+                        <div class="col-lg-6 col-12 d-flex flex-column">
+                            <div class="about-thumb bg-white shadow-lg">
+
+                                <form id="createPostForm" class="custom-form contact-form" action="#" method="POST" enctype="multipart/form-data" role="form">
+                                    <small class="small-title">Favorite Categories</small>
+                                    <h2 class="mb-5">Add Category to your Favorites</h2>
+                                
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <select name="category_id" id="category_id" class="form-control" required>
+                                                <option value="" disabled selected>Select Category</option>
+                                                <% categories.forEach(function(category) { %>
+                                                    <option value="<%= category.id %>"><%= category.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Submit Button -->
+                                        <div class="col-12">
+                                            <button type="submit" class="form-control">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="contact" id="section_5">
+
+
+            </section>
+
+        </main>
+
+        <%- include('partials/footer'); %>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.dropify').dropify();
+
+        $('#createPostForm').on('submit', function (event) {
+            event.preventDefault();
+
+            const category_id = $('#category_id').val().trim();
+
+            if ( !category_id) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Missing Fields',
+                    text: 'Please fill out all required fields.',
+                });
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('category_id', category_id);
+
+            axios.post('http://localhost:3000/api/v1/favorite/create', {
+              category_id
+            })
+            .then(function (response) {
+                if (response.status === 200 && response.data.status === 'SUCCESS') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Post Created!',
+                        text: 'Your post has been successfully created.',
+                    });
+                    $('#createPostForm')[0].reset();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Post Creation Failed!',
+                        text: response.data.message || 'Please try again later.',
+                    });
+                }
+                setTimeout(function(){
+                    window.location.reload()
+                },1000)
+            })
+            .catch(function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Post Creation Failed!',
+                    text: 'An error occurred. Please try again.',
+                });
+                setTimeout(function(){                    
+                    window.location.reload()
+                },1000)
+            });
+        });
+    });
+
+</script>
+
+
+    </body>
+</html>

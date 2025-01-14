@@ -1,6 +1,6 @@
 const elasticDB = require("../../config/es-connection.js");
 
-class Category {
+class UserFavorite {
 
     schema = [
         '_id',
@@ -96,4 +96,4 @@ class Category {
 
 }
 
-module.exports = Category;
+module.exports = UserFavorite;
