@@ -20,5 +20,6 @@ router.get("/detail", frontViewController.productDetailPage);
 
 router.get("/createpost", frontViewController.createPostPage);
 router.get("/post/:postId", frontViewController.createPostPage);
+router.get("/favorites", frontViewController.favoritesPage);
 
 module.exports = router;

@@ -44,6 +44,7 @@ const apiTokenRouter = require('./routes/api_token.js');;
 const authApiRouter = require('./routes/api_auth.js');
 const apiRouter = require('./routes/api.js');
 const viewRouter = require('./routes/view.js');
+const favoriteRouter = require('./routes/favorites.js');
 
 app.use('/api/v1/', apiTokenRouter);
 // app.use('/api/v1/', verifyApiToken, authApiRouter);
@@ -51,6 +52,7 @@ app.use('/api/v1/', apiTokenRouter);
 
 app.use('/api/v1/', authApiRouter);
 app.use('/api/v1/', adminAuth, apiRouter);
+app.use('api/v1/favorites', favoriteRouter);
 
 app.use('/', adminAuth, viewRouter);
 

@@ -5,6 +5,7 @@ const utils = require("../../helpers/utility.js");
 const Category = require("../../models/categoryES.js");
 const Post = require("../../models/postES.js");
 // const {sendOTPEmail} = require('../../helpers/email-module.js');
+const UserFavorite = require("../../models/userFavoriteES.js");
 
 const home = async (req, res) => {
   const user = req.session.auth;
@@ -58,10 +59,29 @@ const productDetailPage = async (req, res) => {
   }
 };
 
+const favoritesPage = async (req, res) => {
+  const user = req.session.auth;
+  if (user) {
+    try {
+      const userId = user.id;
+      const userFavoriteModel = new UserFavorite();
+      const favorites = await userFavoriteModel.getFavoritesByUserId(userId);
+
+      return res.render("favorites", { favorites });
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+      return res.render("favorites", { favorites: [], error: "Could not load favorites." });
+    }
+  } else {
+    return res.redirect("/login");
+  }
+};
+
 module.exports = {
   loginPage,
   home,
   createPostPage,
   listingPage,
   productDetailPage,
+  favoritesPage, 
 };
