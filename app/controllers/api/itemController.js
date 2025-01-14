@@ -1,13 +1,16 @@
 //js
 const status = require('../../helpers/constants.js');
 const utils = require('../../helpers/utility.js'); 
-// const User = require('../../models/user.js');
+const Post = require('../../models/postES.js');
+const User = require('../../models/userES.js');
+const Category = require('../../models/categoryES.js');
 // const {sendOTPEmail} = require('../../helpers/email-module.js');
+const dayjs = require('dayjs');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-       cb(null, './assets/items/');
+       cb(null, './assets/posts/');
     },    
     filename: function (req, file, cb) {
         const fileExtension = file.originalname.split('.').pop(); // Get the file extension
@@ -31,68 +34,53 @@ const uploadItemImage = multer({
 );
 
 const createItem = async (req, res) => {
-    let { name, email, password, lat, lng } = req.body;
+    let { title, price, pickup_address, description, expiry_date, category_id } = req.body;
 
     try {
-        const userModel = new User();
+        const user = req.session.auth;
+        let { image } = req.files;
 
-        let checkEmail = await userModel.checkEmailExist(email);
-        if( checkEmail ){
-            return res.json({
-                status: status.FAILURE_STATUS,
-                message: "Email is already exist",            
-                data: {}
-            });
+        const postModel = new Post();
+        const categoryModel = new Category();
+        const category = await categoryModel.getById(category_id);
+
+        const insertData = {
+            title, 
+            username: user.name,
+            type:'sell', 
+            price: price ?? 0,
+            category_id,
+            category: category.name,
+            pickup_address,
+            description,
+            expiry_date,
+            lat: '45.12323',
+            lng: '65.12323',
+            labels:[],
+            is_sold:0,
+            status: 1,
+            image: '/assets/posts/'+image[0].filename,
+            created_at: dayjs(),
+            updated_at: dayjs(),
+            created_by_id: user.id
         }
 
-        utils.cryptPassword(password, async(hashPassword) => {                      
-            if(hashPassword) {
+        const postId = await postModel.create(insertData);
+        if (postId) {
 
-                let signup_step = status.SIGNUP_STEP_ACCOUNT;
-
-                //TODO: Temporary disable otp generation
-                // let otp_code = utils.generateOTP();
-                let otp_code = "1122";
-                let otp_created_at = utils.getFormatedDate()
-                
-                const insertData = {
-                    name, 
-                    email, 
-                    password: hashPassword, 
-                    lat,
-                    lng,
-                    role_id: status.ROLE_USER,
-                    otp_code,
-                    otp_created_at,
-                    status: status.USER_STATUS_ACTIVE,
-                    signup_step,
-                    is_email_verified: 0,
-                    email_verified_at: null,
-                    profile_image: '',
-                    joined_at: dayjs()
-                }
-
-                const userId = await userModel.create(insertData);
-                if (userId) {
-
-                    return res.json({
-                        status: status.SUCCESS_STATUS,
-                        message: 'Account created successfully! Please verify your email address to continue.',						
-                        data: {
-                            // auth_token: auth_token,
-                            user_id: userId
-                        }
-                    });
-                            
-                } else {
-                    return res.json({
-                        status: status.FAILURE_STATUS,
-                        message: 'Failed to create account!',						
-                        data: {}
-                    });
-                }                        
-            } 
-        });
+            return res.json({
+                status: status.SUCCESS_STATUS,
+                message: 'Post created successfully.',						
+                data: { }
+            });
+                    
+        } else {
+            return res.json({
+                status: status.FAILURE_STATUS,
+                message: 'Failed to create post!',						
+                data: {}
+            });
+        }  
 
     } catch (error) {
         return res.json({
@@ -103,7 +91,49 @@ const createItem = async (req, res) => {
     }
 }
 
+const getPosts = async (req, res) => {
+    try {
+        let { page = 1, limit = 10, category_id = null, keyword = null } = req.body;
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        const postModel = new Post();
+        const filters = {
+            page: page,
+            limit: limit,
+            category_id: category_id, // Optional
+            keyword: keyword     // Optional
+        };
+
+        const result = await postModel.getPaginatedPosts(filters);
+
+        return res.json({
+            status: status.SUCCESS_STATUS,
+            message: 'Posts retrieved successfully.',
+            data: {
+                posts: result.posts,
+                pagination: {
+                    total: result.pagination.totalPosts,
+                    currentPage: result.pagination.page,
+                    totalPages: Math.ceil(result.pagination.totalPosts / result.pagination.limit),
+                    limit
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching paginated posts:", error);
+        return res.json({
+            status: status.FAILURE_STATUS,
+            message: 'Failed to retrieve posts!',
+            data: {}
+        });
+    }
+};
+
+
 module.exports =  {
     createItem,
-    uploadItemImage
+    uploadItemImage,
+    getPosts
 };

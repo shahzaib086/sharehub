@@ -28,6 +28,32 @@ class Category {
         }
     }
 
+    async getAll() {
+        try {
+            const result = await elasticDB.search({
+                index: this.tableName,
+                _source: this.schema,
+                body: {
+                    query: {
+                        match_all: {}
+                    }
+                }
+            });
+    
+            const data = result.body.hits.hits.map(hit => {
+                return {
+                    id: hit._id,
+                    ...hit._source
+                };
+            });
+    
+            return data;
+        } catch (err) {
+            console.error("Error:", err);
+            return [];
+        }
+    }
+
     async create(user) {
         try {
             const result = await elasticDB.index({

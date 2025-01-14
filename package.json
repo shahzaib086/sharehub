@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "es7": "npm:@elastic/elasticsearch@^7.17.14",
     "express": "^4.19.2",
     "express-session": "^1.18.0",

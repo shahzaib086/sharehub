@@ -3,12 +3,13 @@ const Joi = require('joi');
 
 // Define rules for each entity
 const rules = {
-  createItem: Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
-    lat: Joi.string().optional(),
-    lng: Joi.string().optional(),
+  createPost: Joi.object({
+    title: Joi.string().required(),
+    price: Joi.string().required(),
+    category_id: Joi.string().required(),
+    pickup_address: Joi.string().required(),
+    description: Joi.string().required(),
+    expiry_date: Joi.string().required(),
   }),
 };
 
@@ -27,5 +28,5 @@ const validate = (schema) => (req, res, next) => {
 
 // Export validation middlewares
 module.exports = {
-  validateCreateItem: validate(rules.createItem),
+  validateCreatePost: validate(rules.createPost),
 };

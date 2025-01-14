@@ -51,9 +51,22 @@ const signup = async (req, res) => {
                 const userId = await userModel.create(insertData);
                 if (userId) {
 
+                    //For web start
+                    let user = await userModel.getById(userId);
+                    let d = user;
+                    let auth_token = authToken.generate({
+                        ...d
+                    })            
+                    d.access_token = auth_token
+                    req.session.user = {
+                        id: userId,
+                        access_token:d.access_token
+                    }
+                    //For web end
+
                     return res.json({
                         status: status.SUCCESS_STATUS,
-                        message: 'Account created successfully! Please verify your email address to continue.',						
+                        message: 'Account created successfully!',						
                         data: {
                             // auth_token: auth_token,
                             user_id: userId
@@ -112,6 +125,13 @@ const login = async (req, res) => {
                     })            
                     d.access_token = auth_token
                     d.password = undefined;
+
+                    //For web start
+                    req.session.user = {
+                        id: id,
+                        access_token:d.access_token
+                    }
+                    //For web end
 
                     res.json({
                         status: status.SUCCESS_STATUS,
@@ -273,9 +293,22 @@ const resendOTP = async(req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    // Clear the session
+    req.session.destroy((err) => {
+        if (err) {
+        console.error('Error destroying session:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+    
+        res.redirect('/home');
+    });
+};
+
 module.exports =  {
     signup,
     login,
     verifyOTP,
     resendOTP,
+    logout
 };

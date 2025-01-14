@@ -53,6 +53,31 @@ const seedCategories = async (req, res) => {
     }
 }
 
+const getCategories = async (req, res) => {
+
+    try {
+        const categoryModel = new Category();
+
+        const categories = await categoryModel.getAll();
+        
+        return res.json({
+            status: status.SUCCESS_STATUS,
+            message: 'Category List',						
+            data: {
+                categories: categories
+            }
+        });
+                    
+    } catch (error) {
+        return res.json({
+            status: status.FAILURE_STATUS,
+            message: error.message,						                
+            data: {}
+        });      
+    }
+}
+
 module.exports =  {
     seedCategories,
+    getCategories
 };
