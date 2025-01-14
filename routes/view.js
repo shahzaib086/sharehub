@@ -16,6 +16,8 @@ router.get("/home", frontViewController.home);
 
 router.get("/listing", frontViewController.listingPage);
 
+router.get("/detail", frontViewController.productDetailPage);
+
 router.get("/createpost", frontViewController.createPostPage);
 router.get("/post/:postId", frontViewController.createPostPage);
 
