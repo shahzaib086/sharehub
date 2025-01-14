@@ -35,7 +35,7 @@ const seedCategories = async (req, res) => {
         
         return res.json({
             status: status.SUCCESS_STATUS,
-            message: 'Account created successfully! Please verify your email address to continue.',						
+            message: 'Category seeded successfully.',						
             data: {
                 // auth_token: auth_token,
                 user_id: userId
