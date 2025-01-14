@@ -76,9 +76,9 @@ In today's world, a lot of resources, especially food, go to waste while others 
 
 ## 3. Items Management (`/posts`)
 
-### **GET /posts**
+### **POST /posts**
 - **Purpose**: Retrieves a list of all items available on the platform with optional filters and pagination.
-- **Query Parameters**:
+- **Request Body**:
   - `page`: The page number to fetch (defaults to 1 if not provided).
   - `limit`: The number of items to return per page (defaults to 10 if not provided).
   - `category_id`: The category ID to filter items by. (Example: `"Food"`)
