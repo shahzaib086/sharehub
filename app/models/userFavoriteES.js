@@ -1,6 +1,6 @@
 const elasticDB = require("../../config/es-connection.js");
 
-class Category {
+class UserFavorite {
 
     schema = [
         '_id',
@@ -94,6 +94,35 @@ class Category {
         }
     }
 
+    async getFavoriteItemsByUserId(userId) {
+        try {
+            // Fetch user's favorite categories
+            const favoriteCategoriesResult = await elasticDB.search({
+                index: this.tableName,
+                _source: this.schema,
+                body: {
+                    query: {
+                        match: { user_id: userId }
+                    }
+                }
+            });
+
+            const favoriteCategories = favoriteCategoriesResult.body.hits.hits.map(hit => hit._source.category_id);
+
+            if (favoriteCategories.length === 0) {
+                return [];
+            }
+
+            return favoriteCategoriesResult.body.hits.hits.map(hit => ({
+                id: hit._id,
+                ...hit._source
+            }));
+        } catch (err) {
+            console.error("Error fetching favorite items:", err);
+            return [];
+        }
+    }
+
 }
 
-module.exports = Category;
+module.exports = UserFavorite;

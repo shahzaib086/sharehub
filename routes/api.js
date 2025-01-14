@@ -4,6 +4,8 @@ const router = express.Router();
 // Controllers
 const userController = require("../app/controllers/api/userController");
 const interestController = require("../app/controllers/api/interestController");
+const {getFavorites} = require('../app/controllers/api/userFavoriteController');
+
 // const itemController = require("../app/controllers/api/itemController");
 
 
@@ -43,5 +45,8 @@ router.post(
   "/favorite/create", 
   interestController.createFavorite
 );
+
+
+router.get('/favorites', getFavorites);
 
 module.exports = router;

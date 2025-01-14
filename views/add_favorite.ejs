@@ -28,7 +28,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <% if (auth && auth.name) { %>
-                        <li class="nav-item">
+                          <li class="nav-item">
                             <button
                               class="nav-link click-scroll logout-btn"
                               onclick="explorePage()"
@@ -124,20 +124,10 @@
                             <div class="about-thumb bg-white shadow-lg">
 
                                 <form id="createPostForm" class="custom-form contact-form" action="#" method="POST" enctype="multipart/form-data" role="form">
-                                    <small class="small-title">Create <strong class="text-warning">Post</strong></small>
-                                    <h2 class="mb-5">Share Your Item</h2>
+                                    <small class="small-title">Favorite Categories</small>
+                                    <h2 class="mb-5">Add Category to your Favorites</h2>
                                 
                                     <div class="row">
-                                        <!-- Title -->
-                                        <div class="col-12 mb-3">
-                                            <input type="text" name="title" id="title" class="form-control" placeholder="Post Title" required>
-                                        </div>
-                                
-                                        <!-- Price -->
-                                        <div class="col-12 mb-3">
-                                            <input type="number" name="price" id="price" class="form-control" placeholder="Price ($) (optional)">
-                                        </div>
-
                                         <div class="col-12 mb-3">
                                             <select name="category_id" id="category_id" class="form-control" required>
                                                 <option value="" disabled selected>Select Category</option>
@@ -146,30 +136,10 @@
                                                 <% }) %>
                                             </select>
                                         </div>
-                                
-                                        <!-- Pickup Address -->
-                                        <div class="col-12 mb-3">
-                                            <input type="text" name="pickup_address" id="pickup_address" class="form-control" placeholder="Pickup Address" required>
-                                        </div>
-                                
-                                        <!-- Description -->
-                                        <div class="col-12 mb-3">
-                                            <textarea name="description" id="description" rows="4" class="form-control" placeholder="Description" required></textarea>
-                                        </div>
-                                
-                                        <!-- Expiry Date -->
-                                        <div class="col-12 mb-3">
-                                            <input type="date" name="expiry_date" id="expiry_date" class="form-control" required>
-                                        </div>
-                                
-                                        <!-- Image Upload -->
-                                        <div class="col-12 mb-4">
-                                            <input type="file" name="image" id="image" class="dropify" data-height="150" required>
-                                        </div>
-                                
+                                        
                                         <!-- Submit Button -->
                                         <div class="col-12">
-                                            <button type="submit" class="form-control">Create Post</button>
+                                            <button type="submit" class="form-control">Submit</button>
                                         </div>
                                     </div>
                                 </form>
@@ -202,15 +172,9 @@
         $('#createPostForm').on('submit', function (event) {
             event.preventDefault();
 
-            const title = $('#title').val().trim();
-            const price = $('#price').val().trim();
-            const pickup_address = $('#pickup_address').val().trim();
-            const description = $('#description').val().trim();
-            const expiry_date = $('#expiry_date').val().trim();
             const category_id = $('#category_id').val().trim();
-            const image = $('#image')[0].files[0]; // Get the uploaded image
 
-            if (!title || !pickup_address || !description || !expiry_date || !category_id) {
+            if ( !category_id) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Missing Fields',
@@ -220,33 +184,23 @@
             }
 
             const formData = new FormData();
-            formData.append('title', title);
-            formData.append('price', price);
-            formData.append('pickup_address', pickup_address);
-            formData.append('description', description);
-            formData.append('expiry_date', expiry_date);
             formData.append('category_id', category_id);
-            if (image) {
-                formData.append('image', image);
-            }
 
-            axios.post('http://localhost:3000/api/v1/post/create', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            axios.post('http://localhost:3000/api/v1/favorite/create', {
+              category_id
             })
             .then(function (response) {
                 if (response.status === 200 && response.data.status === 'SUCCESS') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Post Created!',
-                        text: 'Your post has been successfully created.',
+                        title: 'Success!',
+                        text: 'Category has been added to favorites successfully.',
                     });
                     $('#createPostForm')[0].reset();
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Post Creation Failed!',
+                        title: 'Failed!',
                         text: response.data.message || 'Please try again later.',
                     });
                 }
