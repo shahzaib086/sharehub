@@ -4,9 +4,9 @@ const user_favorite_Model = new UserFavorite();
 
 const getFavorites = async (req, res) => {
     try {
-        const userId = req.params.userId;
-        const favoriteItems = await user_favorite_Model.getFavoriteItemsByUserId(userId);
-
+        // const userId = req.params.userId;
+        const user = req.session.auth;
+        const favoriteItems = await user_favorite_Model.getFavoriteItemsByUserId(user.id);
         return res.json({
             status: 'SUCCESS',
             message: 'Favorite items retrieved successfully.',

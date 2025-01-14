@@ -28,7 +28,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <% if (auth && auth.name) { %>
-                        <li class="nav-item">
+                          <li class="nav-item">
                             <button
                               class="nav-link click-scroll logout-btn"
                               onclick="explorePage()"
@@ -48,6 +48,12 @@
                               ><strong class="text-warning">00</strong></small
                             >
                             Create Post
+                          </button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link click-scroll logout-btn" onclick="favoritePage()">
+                            <small class="small-title"><strong class="text-warning">00</strong></small>
+                            Favorite
                           </button>
                         </li>
                         <li class="nav-item">
@@ -187,14 +193,14 @@
                 if (response.status === 200 && response.data.status === 'SUCCESS') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Post Created!',
-                        text: 'Your post has been successfully created.',
+                        title: 'Success!',
+                        text: 'Category has been added to favorites successfully.',
                     });
                     $('#createPostForm')[0].reset();
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Post Creation Failed!',
+                        title: 'Failed!',
                         text: response.data.message || 'Please try again later.',
                     });
                 }
