@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Controllers
 const userController = require("../app/controllers/api/userController");
+const interestController = require("../app/controllers/api/interestController");
 // const itemController = require("../app/controllers/api/itemController");
 
 
@@ -24,6 +25,7 @@ router.get(
   userController.getCategories
 );
 
+// Post Routes
 router.post(
   "/post/create", 
   itemController.uploadItemImage,
@@ -34,6 +36,12 @@ router.post(
 router.post(
   "/posts", 
   itemController.getPosts
+);
+
+//Interest Routes
+router.post(
+  "/favorite/create", 
+  interestController.createFavorite
 );
 
 module.exports = router;

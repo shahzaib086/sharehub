@@ -33,7 +33,7 @@
                   >
                   Favorite
                 </button>
-              </li>
+            </li>
             <li class="nav-item">
                 <button
                   class="nav-link click-scroll logout-btn"
@@ -185,13 +185,11 @@
                               const postHtml = `
                                   <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                                       <div class="card product_card shadow-lg h-100">
-                                        <div class="image-box">
                                           <img
                                               src="${post.image || 'https://placehold.co/600x400'}"
                                               class="card-img-top"
                                               alt="product image"
                                           />
-                                        </div>
                                           <div class="card-body">
                                               <a href="#">
                                                   <h6 class="">${(post.price>0)?'$ '+post.price:'FREE'}</h6>

@@ -9,7 +9,7 @@ const Post = require("../../models/postES.js");
 const home = async (req, res) => {
   const user = req.session.auth;
   if (user) {
-    return res.render("home");
+    return res.redirect("/listing");
   } else {
     return res.render("home");
   }
