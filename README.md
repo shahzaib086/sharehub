@@ -32,14 +32,18 @@ In today's world, a lot of resources, especially food, go to waste while others 
 
 # ShareHub API Documentation
 
+# ShareHub API Documentation
+
 ## 1. User Registration and Management (`/users`)
 
 ### **POST /users**
 - **Purpose**: Registers a new user on the platform.
 - **Request Body**: 
-  - `username`: The name of the user. (Example: `"johndoe"`)
+  - `name`: The name of the user. (Example: `"johndoe"`)
   - `password`: The user's password. (Example: `"password123"`)
   - `email`: The user's email address. (Example: `"johndoe@example.com"`)
+  - `lat`: The user's latitude location. (Example: `"44.4268° N"`)
+  - `lng`: The user's longitude location. (Example: `"26.1025° E"`)
 - **Response**: 
   - **201 Created**: User registered successfully.
 
@@ -50,75 +54,84 @@ In today's world, a lot of resources, especially food, go to waste while others 
 
 ---
 
-## 2. User's Favorite Categories (`/users/{id}/favorites`)
+## 2. User's Favorite Categories (`/favorite`)
 
-### **GET /users/{id}/favorites**
-- **Purpose**: Retrieves a list of categories that a particular user has marked as favorites.
-- **Path Parameter**: 
-  - `id`: The unique identifier of the user.
+### **GET /favorite**
+- **Purpose**: Retrieves a list of categories that the authenticated user has marked as favorites.
 - **Response**: 
   - **200 OK**: A list of favorite categories for the specified user.
 
-### **POST /users/{id}/favorites**
+### **POST /favorite/create**
 - **Purpose**: Adds a new category to the user's list of favorites.
-- **Path Parameter**: 
-  - `id`: The unique identifier of the user.
 - **Request Body**: 
-  - `category`: The name of the category to add as a favorite. (Example: `"Food"`)
+  - `user_id`: The ID of the user adding the category. (Example: `"12345"`)
+  - `user_name`: The name of the user adding the category. (Example: `"johndoe"`)
+  - `category_id`: The unique ID of the category being added. (Example: `"abc123"`)
+  - `category_name`: The name of the category being added. (Example: `"Electronics"`)
+  - `created_at`: Timestamp of when the category was added. (Example: `"2025-01-14T10:30:00Z"`)
 - **Response**: 
   - **201 Created**: Favorite category added successfully.
 
 ---
 
-## 3. Items Management (`/items`)
+## 3. Items Management (`/posts`)
 
-### **GET /items**
-- **Purpose**: Retrieves a list of all items available on the platform with optional filters.
-- **Query Parameters**:
-  - `keyword`: A search keyword to filter items by name or description. (Example: `"bread"`)
-  - `category`: Filter by item category. (Example: `"Food"`)
-  - `location`: Filter by location in latitude,longitude format. (Example: `"40.7128,-74.0060"`)
+### **POST /posts**
+- **Purpose**: Retrieves a list of all items available on the platform with optional filters and pagination.
+- **Request Body**:
+  - `page`: The page number to fetch (defaults to 1 if not provided).
+  - `limit`: The number of items to return per page (defaults to 10 if not provided).
+  - `category_id`: The category ID to filter items by. (Example: `"Food"`)
+  - `keyword`: A keyword to search for in item names, descriptions, or other fields. (Example: `"bread"`)
 - **Response**: 
   - **200 OK**: A list of items matching the filters.
 
-### **POST /items**
+### **POST /posts/create**
 - **Purpose**: Adds a new item to the platform for sharing.
 - **Request Body**: 
-  - `name`: The name of the item. (Example: `"Fresh Bread"`)
-  - `category`: The category of the item. (Example: `"Food"`)
-  - `description`: A detailed description of the item. (Example: `"A loaf of fresh bread available for pickup."`)
-  - `location`: The location of the item in latitude and longitude format. (Example: `{"lat": 40.7128, "lon": -74.0060}`)
+  - `title`: The name of the item. (Example: `"Fresh Bread"`)
+  - `price`: The price of the item. (Example: `"12 $"`)
+  - `pickup_address`: The address for item pickup. (Example: `"Bulevardul Iuliu Maniu 1-3"`)
+  - `Description`: A description of the item. (Example: `"100 grams packet"`)
+  - `expiry_date`: The expiry date of the item. (Example: `"18-01-2025"`)
+  - `category_id`: The category of the item. (Example: `"Food"`)
 - **Response**: 
   - **201 Created**: Item added successfully.
 
 ---
 
-## 4. Item Details (`/items/{id}`)
+## 4. Item Details (`/posts/{id}`)
 
-### **GET /items/{id}**
+### **GET /posts/{id}**
 - **Purpose**: Retrieves detailed information about a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
 - **Response**: 
   - **200 OK**: Details of the requested item.
 
-### **PUT /items/{id}**
+### **PUT /posts/{id}**
 - **Purpose**: Updates the details of a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
 - **Request Body**: 
-  - `name`: Updated name of the item. (Example: `"Fresh Bread"`)
-  - `category`: Updated category of the item. (Example: `"Food"`)
-  - `description`: Updated description of the item. (Example: `"A loaf of fresh bread available for pickup."`)
+  - `title`: Updated name of the item. (Example: `"Fresh Bread"`)
+  - `price`: Updated price of the item. (Example: `"10 $"`)
+  - `pickup_address`: Updated address for item pickup. (Example: `"Bulevardul Iuliu Maniu 1-3"`)
+  - `Description`: Updated description of the item. (Example: `"A loaf of fresh bread available for pickup."`)
+  - `expiry_date`: Updated expiry date of the item. (Example: `"18-01-2025"`)
+  - `category_id`: Updated category of the item. (Example: `"Food"`)
 - **Response**: 
   - **200 OK**: Item updated successfully.
 
-### **DELETE /items/{id}**
+### **DELETE /posts/{id}**
 - **Purpose**: Deletes a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
 - **Response**: 
   - **200 OK**: Item deleted successfully.
 
+---
+
+This README contains the API documentation for ShareHub, providing details on user registration, favorites, items management, and item details endpoints. For more information or updates, feel free to reach out!
 
 
