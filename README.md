@@ -74,11 +74,11 @@ In today's world, a lot of resources, especially food, go to waste while others 
 
 ---
 
-## 3. Items Management (`/posts`)
+## 3. Items Management (`/items`)
 
-### **POST /posts**
+### **GET /items**
 - **Purpose**: Retrieves a list of all items available on the platform with optional filters and pagination.
-- **Request Body**:
+- **Query Params**:
   - `page`: The page number to fetch (defaults to 1 if not provided).
   - `limit`: The number of items to return per page (defaults to 10 if not provided).
   - `category_id`: The category ID to filter items by. (Example: `"Food"`)
@@ -86,7 +86,7 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - **Response**: 
   - **200 OK**: A list of items matching the filters.
 
-### **POST /posts/create**
+### **POST /items/create**
 - **Purpose**: Adds a new item to the platform for sharing.
 - **Request Body**: 
   - `title`: The name of the item. (Example: `"Fresh Bread"`)
@@ -100,16 +100,16 @@ In today's world, a lot of resources, especially food, go to waste while others 
 
 ---
 
-## 4. Item Details (`/posts/{id}`)
+## 4. Item Details (`/items/{id}`)
 
-### **GET /posts/{id}**
+### **GET /items/{id}**
 - **Purpose**: Retrieves detailed information about a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
 - **Response**: 
   - **200 OK**: Details of the requested item.
 
-### **PUT /posts/{id}**
+### **PUT /items/{id}**
 - **Purpose**: Updates the details of a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
@@ -123,7 +123,7 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - **Response**: 
   - **200 OK**: Item updated successfully.
 
-### **DELETE /posts/{id}**
+### **DELETE /items/{id}**
 - **Purpose**: Deletes a specific item.
 - **Path Parameter**: 
   - `id`: The unique identifier of the item.
