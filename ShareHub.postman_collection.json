@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "1b67c59f-7121-486e-930c-af3edcdfde8c",
+		"name": "ShareHub",
+		"description": "Overflow: [https://overflow.io/s/FCF08NU1/?node=5eb03a13](https://overflow.io/s/FCF08NU1/?node=5eb03a13)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30671454"
+	},
+	"item": [
+		{
+			"name": "User Authentication",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"\r",
+									"const userId = responseJson.data.user_id;\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set(\"user_id\", userId);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"New User\",\r\n    \"email\": \"newuser1@example.com\",\r\n    \"password\": \"Test@123\",\r\n    \"lat\": \"44.4475639\",\r\n    \"lng\": \"26.0493242\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const responseJson = pm.response.json();\r",
+									"\r",
+									"\r",
+									"const userId = responseJson.data.user_id;\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set(\"user_id\", userId);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"newuser@example.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"const userId = responseJson.data.user_id;\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"user_id\", userId);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category_id",
+							"value": "Cp2R1ZMB79TPN-zDn142",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "New Post",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "pickup_address",
+							"value": "adress",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "description",
+							"type": "text"
+						},
+						{
+							"key": "expiry_date",
+							"value": "2026-12-10",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/shahz/Downloads/ks.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/items/create",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"items",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Seed Categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"const userId = responseJson.data.user_id;\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"user_id\", userId);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"newuser@example.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/category/seed",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"category",
+						"seed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Item List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"const userId = responseJson.data.user_id;\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"user_id\", userId);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/items?page=1&keyword=",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"items"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "keyword",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Favorite Category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"const userId = responseJson.data.user_id;\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"user_id\", userId);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"category_id\":\"Cp2R1ZMB79TPN-zDn142\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/favorite/create",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favorite",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Favorite Category List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/favorites",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"favorites"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({key: 'X-API-TOKEN', value: pm.collectionVariables.get('api_token') });",
+					"pm.request.headers.add({key: 'Authorization', value: 'Bearer '+ pm.collectionVariables.get('bearer_token') });",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://18.134.229.7/api/v1",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "api_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bearer_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
