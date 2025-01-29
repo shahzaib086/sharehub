@@ -27,6 +27,10 @@ In today's world, a lot of resources, especially food, go to waste while others 
 - Nour Zbitou
 - Muhammad Nasir
 
+# Postman Collection
+Root Folder
+- Filename: ShareHub.postman_collection.json
+
 ## Open the `swagger/openapi.yaml` file in any Swagger editor:
 ## [Swagger Editor](https://editor.swagger.io/)
 
